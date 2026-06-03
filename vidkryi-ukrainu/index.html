@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Відкрий Україну — туристичні маршрути Карпатами, замками та містами. Обирай маршрути на карті, плануй мандрівки з нами.">
+    <title>Відкрий Україну | Туристичні маршрути</title>
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/variables.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <section class="header-section">
+        <h2 class="visually-hidden">Навігація сайту</h2>
+        <header class="header d-flex items-center"> 
+            <div class="content-wrap d-flex w-full justify-between">
+                <div class="logo">
+                    <img src="assets/images/logo-icon.png" alt="Відкрий Україну логотип" class="logo-icon">
+                    <a href="index.html" class="title-color" data-translate="logo_text">Відкрий Україну</a>
+                </div>
+                <div id="burgerMenu" class="burger-menu">
+                    <i id="openIcon" class="fa-solid fa-bars"></i>
+                    <i id="closeIcon" class="fa-solid fa-xmark d-none"></i>
+                </div>
+                <nav id="headerNav" class="header-nav">
+                    <ul class="main-menu items-center">
+                        <li><a href="index.html" class="active" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                    <div class="mobile-auth">
+                        <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                        <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                    </div>
+                    <div class="mobile-user-info user-info">
+                        <span class="user-name"></span>
+                        <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                    </div>
+                    <div class="mobile-lang-selector">
+                        <div class="lang-selector">
+                            <div class="lang-selected" onclick="toggleLangDropdownMobile()">
+                                <span id="selectedLangTextMobile">UA</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="lang-options" id="langOptionsMobile">
+                                <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                                    <span class="flag">🇺🇦</span>
+                                    <span>Українська</span>
+                                </div>
+                                <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                                    <span class="flag">🇬🇧</span>
+                                    <span>English</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="desktop-auth">
+                    <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                    <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                </div>
+                <div class="desktop-user-info user-info">
+                    <span class="user-name"></span>
+                    <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                </div>
+                <div class="lang-selector desktop-lang-selector">
+                    <div class="lang-selected" onclick="toggleLangDropdown()">
+                        <span id="selectedLangText">UA</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="lang-options" id="langOptions">
+                        <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                            <span class="flag">🇺🇦</span>
+                            <span>Українська</span>
+                        </div>
+                        <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                            <span class="flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <main>
+        <section class="hero">
+            <div class="hero-background">
+                <img src="assets/images/hero-background.jpg" alt="Карпатські гори" class="hero-image">
+            </div>
+            <div class="hero-content container">
+                <h1 class="hero-title" data-translate="hero_title">Відкрий Україну: Мандруй з нами!</h1>
+                <p class="hero-text" data-translate="hero_text">Авторські маршрути Карпатами, замками та містами. Обирай свій ідеальний трек просто на карті.</p>
+                <a href="routes.html" class="btn btn--primary btn--large" data-translate="hero_btn">До маршрутів</a>
+            </div>
+        </section>
+
+        <section class="popular-routes">
+            <div class="container">
+                <h2 class="section-title" data-translate="popular_title">Популярні маршрути</h2>
+                <p class="section-subtitle" data-translate="popular_subtitle">Найулюбленіші маршрути наших мандрівників</p>
+                <div class="routes-grid" id="popular-routes-container"></div>
+                <div class="text-center">
+                    <a href="routes.html" class="btn btn--outline btn--medium" data-translate="popular_all_btn">Всі маршрути</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title" data-translate="features_title">Чому обирають нас</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg class="icon" width="48" height="48">
+                                <use xlink:href="assets/images/icons/sprite.svg#icon-map"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title" data-translate="features_map_title">Зручна карта</h3>
+                        <p class="feature-text" data-translate="features_map_text">Обирай маршрути просто на карті України. Клікай на регіон та переглядай доступні треки.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg class="icon" width="48" height="48">
+                                <use xlink:href="assets/images/icons/sprite.svg#icon-route"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title" data-translate="features_route_title">Перевірені маршрути</h3>
+                        <p class="feature-text" data-translate="features_route_text">Всі маршрути пройдені нашими гідами. Тільки найкращі локації та безпечні треки.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg class="icon" width="48" height="48">
+                                <use xlink:href="assets/images/icons/sprite.svg#icon-heart"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title" data-translate="features_heart_title">100% задоволення</h3>
+                        <p class="feature-text" data-translate="features_heart_text">Понад 1000 щасливих мандрівників. Приєднуйся до нашої спільноти!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials" id="testimonials">
+            <div class="container">
+                <h2 class="section-title" data-translate="testimonials_title">Відгуки мандрівників</h2>
+                <div class="testimonials-grid" id="testimonials-container"></div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2 class="cta-title" data-translate="cta_title">Готовий до пригод?</h2>
+                <p class="cta-text" data-translate="cta_text">Обери маршрут та вирушай у незабутню подорож</p>
+                <button id="openModalBtn" class="btn btn--primary btn--large" data-translate="cta_btn">Отримати консультацію</button>
+            </div>
+        </section>
+    </main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="assets/images/logo-icon.png" alt="Відкрий Україну" class="footer-logo-icon">
+                <span class="footer-logo-text" data-translate="logo_text">Відкрий Україну</span>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Telegram">
+                    <i class="fa-brands fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4 data-translate="footer_navigation">Навігація</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_company">Компанія</h4>
+                    <ul>
+                        <li><a href="about.html" data-translate="footer_about">Про нас</a></li>
+                        <li><a href="about.html#contact" data-translate="footer_contacts">Контакти</a></li>
+                        <li><a href="routes.html#price" data-translate="footer_prices">Ціни</a></li>
+                        <li><a href="index.html#testimonials" data-translate="footer_reviews">Відгуки</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_contact_us">Контакти</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone" style="margin-right:8px;"></i>+38 (050) 123-45-67</a></li>
+                        <li><a href="#"><i class="fas fa-envelope" style="margin-right:8px;"></i>info@discover-ukraine.ua</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right:8px;"></i>Київ, вул. Хрещатик, 1</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col newsletter">
+                    <h4 data-translate="footer_newsletter">Будьте в курсі</h4>
+                    <form class="newsletter-form">
+                        <input type="email" data-translate-placeholder="footer_placeholder" placeholder="Ваша електронна адреса" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2026 <span data-translate="logo_text">Відкрий Україну</span>. <span data-translate="footer_copyright">Всі права захищено</span></p>
+            <p data-translate="footer_developed">Розроблено з любов'ю для мандрівників</p>
+        </div>
+    </div>
+</footer>
+
+    <div id="modal" class="modal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="modal-title" data-translate="modal_consultation_title">Отримати консультацію</h3>
+            <form id="consultationForm" class="modal-form">
+                <div class="form-group"><input type="text" id="name" data-translate-placeholder="modal_name" placeholder="Ваше ім'я" required></div>
+                <div class="form-group"><input type="tel" id="phone" data-translate-placeholder="modal_phone" placeholder="+380 (__) ___ __ __" required></div>
+                <div class="form-group"><input type="email" id="email" data-translate-placeholder="modal_email" placeholder="your@email.com" required></div>
+                <div class="form-group">
+                    <select id="route-interest">
+                        <option value="" data-translate="modal_route_placeholder">Оберіть маршрут</option>
+                        <option value="hoverla">Говерла</option>
+                        <option value="synevyr">Озеро Синевир</option>
+                        <option value="old-town">Старе місто Львів</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full" data-translate="modal_submit">Надіслати</button>
+            </form>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config/supabase.js"></script>
+<script src="assets/script/script.js"></script>
+</body>
+</html>

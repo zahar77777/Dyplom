@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Дізнайтеся більше про команду 'Відкрий Україну', нашу місію та цінності. Ми створюємо найкращі туристичні маршрути Україною.">
+    <title>Про нас | Відкрий Україну</title>
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/variables.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <section class="header-section">
+        <h2 class="visually-hidden">Навігація сайту</h2>
+        <header class="header d-flex items-center"> 
+            <div class="content-wrap d-flex w-full justify-between">
+                <div class="logo">
+                    <img src="assets/images/logo-icon.png" alt="Відкрий Україну логотип" class="logo-icon">
+                    <a href="index.html" class="title-color" data-translate="logo_text">Відкрий Україну</a>
+                </div>
+                <div id="burgerMenu" class="burger-menu">
+                    <i id="openIcon" class="fa-solid fa-bars"></i>
+                    <i id="closeIcon" class="fa-solid fa-xmark d-none"></i>
+                </div>
+                <nav id="headerNav" class="header-nav">
+                    <ul class="main-menu items-center">
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" class="active" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                    <div class="mobile-auth">
+                        <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                        <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                    </div>
+                    <div class="mobile-user-info user-info">
+                        <span class="user-name"></span>
+                        <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                    </div>
+                    <div class="mobile-lang-selector">
+                        <div class="lang-selector">
+                            <div class="lang-selected" onclick="toggleLangDropdownMobile()">
+                                <span id="selectedLangTextMobile">UA</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="lang-options" id="langOptionsMobile">
+                                <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                                    <span class="flag">🇺🇦</span>
+                                    <span>Українська</span>
+                                </div>
+                                <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                                    <span class="flag">🇬🇧</span>
+                                    <span>English</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="desktop-auth">
+                    <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                    <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                </div>
+                <div class="desktop-user-info user-info">
+                    <span class="user-name"></span>
+                    <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                </div>
+                <div class="lang-selector desktop-lang-selector">
+                    <div class="lang-selected" onclick="toggleLangDropdown()">
+                        <span id="selectedLangText">UA</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="lang-options" id="langOptions">
+                        <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                            <span class="flag">🇺🇦</span>
+                            <span>Українська</span>
+                        </div>
+                        <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                            <span class="flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <main>
+        <section class="about-hero">
+            <div class="container">
+                <h1 class="page-title" data-translate="about_title">Про нашу команду</h1>
+                <p class="page-subtitle" data-translate="about_subtitle">Ми — команда ентузіастів, які закохані в Україну та хочуть показати її красу кожному</p>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2 data-translate="about_story_title">Наша історія</h2>
+                        <p data-translate="about_story_text1">«Відкрий Україну» народилася з любові до подорожей та бажання показати світові неймовірну красу нашої країни. Все почалося з невеликої групи друзів, які вирішили дослідити найвіддаленіші куточки Карпат. З кожним разом наші мандрівки ставали довшими, а маршрути — цікавішими.</p>
+                        <p data-translate="about_story_text2">Сьогодні ми — професійна команда, яка створила понад 50 унікальних маршрутів Україною. Ми особисто перевіряємо кожен трек, щоб гарантувати вашу безпеку та незабутні враження. Наша місія — зробити подорожі доступними, цікавими та безпечними для всіх.</p>
+                    </div>
+                    <div class="about-image">
+                        <img src="assets/images/hoverla.jpg" alt="Команда в горах">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" style="background: var(--gray-bg);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-translate="about_stats_title">Ми в цифрах</h2>
+                    <p data-translate="about_stats_subtitle">Наші досягнення за роки роботи</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statRoutes">0</div>
+                        <div class="stat-label" data-translate="about_routes_count">Унікальних маршрутів</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTravelers">0</div>
+                        <div class="stat-label" data-translate="about_travelers">Щасливих мандрівників</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statRegions">0</div>
+                        <div class="stat-label" data-translate="about_regions">Областей України</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statReviews">0</div>
+                        <div class="stat-label" data-translate="about_reviews">Позитивних відгуків</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-translate="about_values_title">Наші цінності</h2>
+                    <p data-translate="about_values_subtitle">Те, що нас надихає та веде вперед</p>
+                </div>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3 class="value-title" data-translate="about_safety_title">Безпека понад усе</h3>
+                        <p class="value-text" data-translate="about_safety_text">Кожен маршрут перевіряється нашими досвідченими гідами. Ми гарантуємо безпечні умови для подорожей.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-heart"></i></div>
+                        <h3 class="value-title" data-translate="about_love_title">Любов до України</h3>
+                        <p class="value-text" data-translate="about_love_text">Ми щиро любимо нашу країну і прагнемо показати її найкращі сторони кожному мандрівнику.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                        <h3 class="value-title" data-translate="about_eco_title">Екологічність</h3>
+                        <p class="value-text" data-translate="about_eco_text">Дбаємо про природу та пропагуємо відповідальний туризм. Не залишаємо слідів, окрім приємних спогадів.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-users"></i></div>
+                        <h3 class="value-title" data-translate="about_community_title">Дружня спільнота</h3>
+                        <p class="value-text" data-translate="about_community_text">Ми створюємо не просто тури, а справжню сім'ю однодумців, де кожен може знайти нових друзів.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="contact" style="background: var(--gray-bg);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-translate="about_contact_title">Зв'яжіться з нами</h2>
+                    <p data-translate="about_contact_subtitle">Ми завжди раді відповісти на ваші запитання</p>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <i class="fas fa-phone-alt"></i>
+                        <h3 data-translate="about_phone">Телефон</h3>
+                        <p>+380 (67) 123-45-67</p>
+                        <p>+380 (98) 765-43-21</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3 data-translate="about_email">Email</h3>
+                        <p>info@vidkryi-ua.com</p>
+                        <p>tour@vidkryi-ua.com</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3 data-translate="about_address">Адреса</h3>
+                        <p>м. Київ, вул. Хрещатик, 22</p>
+                        <p>Пн-Пт: 10:00 - 19:00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="assets/images/logo-icon.png" alt="Відкрий Україну" class="footer-logo-icon">
+                <span class="footer-logo-text" data-translate="logo_text">Відкрий Україну</span>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Telegram">
+                    <i class="fa-brands fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4 data-translate="footer_navigation">Навігація</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_company">Компанія</h4>
+                    <ul>
+                        <li><a href="about.html" data-translate="footer_about">Про нас</a></li>
+                        <li><a href="about.html#contact" data-translate="footer_contacts">Контакти</a></li>
+                        <li><a href="routes.html#price" data-translate="footer_prices">Ціни</a></li>
+                        <li><a href="index.html#testimonials" data-translate="footer_reviews">Відгуки</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_contact_us">Контакти</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone" style="margin-right:8px;"></i>+38 (050) 123-45-67</a></li>
+                        <li><a href="#"><i class="fas fa-envelope" style="margin-right:8px;"></i>info@discover-ukraine.ua</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right:8px;"></i>Київ, вул. Хрещатик, 1</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col newsletter">
+                    <h4 data-translate="footer_newsletter">Будьте в курсі</h4>
+                    <form class="newsletter-form">
+                        <input type="email" data-translate-placeholder="footer_placeholder" placeholder="Ваша електронна адреса" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2026 <span data-translate="logo_text">Відкрий Україну</span>. <span data-translate="footer_copyright">Всі права захищено</span></p>
+            <p data-translate="footer_developed">Розроблено з любов'ю для мандрівників</p>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config/supabase.js"></script>
+    <script src="assets/script/script.js"></script>
+    <script src="assets/script/about.js"></script>
+</body>
+</html>

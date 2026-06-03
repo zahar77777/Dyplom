@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Детальна інформація про туристичний маршрут Україною">
+    <title>Деталі маршруту | Відкрий Україну</title>
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/styles/variables.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <section class="header-section">
+        <h2 class="visually-hidden">Навігація сайту</h2>
+        <header class="header d-flex items-center"> 
+            <div class="content-wrap d-flex w-full justify-between">
+                <div class="logo">
+                    <img src="assets/images/logo-icon.png" alt="Відкрий Україну логотип" class="logo-icon">
+                    <a href="index.html" class="title-color" data-translate="logo_text">Відкрий Україну</a>
+                </div>
+                <div id="burgerMenu" class="burger-menu">
+                    <i id="openIcon" class="fa-solid fa-bars"></i>
+                    <i id="closeIcon" class="fa-solid fa-xmark d-none"></i>
+                </div>
+                <nav id="headerNav" class="header-nav">
+                    <ul class="main-menu items-center">
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" class="active" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                    <div class="mobile-auth">
+                        <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                        <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                    </div>
+                    <div class="mobile-user-info user-info">
+                        <span class="user-name"></span>
+                        <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                    </div>
+                    <div class="mobile-lang-selector">
+                        <div class="lang-selector">
+                            <div class="lang-selected" onclick="toggleLangDropdownMobile()">
+                                <span id="selectedLangTextMobile">UA</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="lang-options" id="langOptionsMobile">
+                                <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                                    <span class="flag">🇺🇦</span>
+                                    <span>Українська</span>
+                                </div>
+                                <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                                    <span class="flag">🇬🇧</span>
+                                    <span>English</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="desktop-auth">
+                    <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                    <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                </div>
+                <div class="desktop-user-info user-info">
+                    <span class="user-name"></span>
+                    <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                </div>
+                <div class="lang-selector desktop-lang-selector">
+                    <div class="lang-selected" onclick="toggleLangDropdown()">
+                        <span id="selectedLangText">UA</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="lang-options" id="langOptions">
+                        <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                            <span class="flag">🇺🇦</span>
+                            <span>Українська</span>
+                        </div>
+                        <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                            <span class="flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <main>
+        <!-- Hero секція з великим фото -->
+    <section class="route-detail-hero" id="routeHero">
+        <div class="route-hero-image">
+            <img id="heroImage" src="" alt="">
+        </div>
+        <div class="route-hero-overlay"></div>
+        <div class="container route-hero-content">
+            <h1 id="heroTitle" class="route-hero-title">Завантаження...</h1>
+            <div class="route-hero-meta">
+                <span class="hero-region" id="heroRegion">
+                    <i class="fas fa-map-marker-alt"></i> <span></span>
+                </span>
+                <span class="hero-price" id="heroPrice">
+                    <i class="fas fa-tag"></i> <span></span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+        <div class="route-detail-container">
+            <!-- Основна інформація -->
+            <section class="route-info-section">
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-card-content">
+                        <h3 data-translate="route_description_title">Опис маршруту</h3>
+                        <p id="routeDescription"></p>
+                    </div>
+                </div>
+                
+                <div class="info-stats-grid">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-details">
+                            <span class="stat-label" data-translate="route_duration_label">Тривалість</span>
+                            <span class="stat-value" id="routeDuration"></span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-mountain"></i>
+                        <div class="stat-details">
+                            <span class="stat-label" data-translate="route_difficulty_label">Складність</span>
+                            <span class="stat-value" id="routeDifficulty"></span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-location-dot"></i>
+                        <div class="stat-details">
+                            <span class="stat-label" data-translate="route_location_label">Локація</span>
+                            <span class="stat-value" id="routeLocation"></span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-ruler-combined"></i>
+                        <div class="stat-details">
+                            <span class="stat-label" data-translate="route_distance_label">Відстань</span>
+                            <span class="stat-value" id="routeDistance"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Галерея маршруту -->
+            <section class="route-gallery-section">
+                <h2 class="section-title-small" data-translate="route_gallery_title">Фотогалерея маршруту</h2>
+                <div class="route-gallery-container">
+                    <div class="swiper route-gallery-swiper" id="routeGallerySwiper">
+                        <div class="swiper-wrapper" id="routeGalleryWrapper"></div>
+                        <div class="swiper-button-prev gallery-swiper-btn"></div>
+                        <div class="swiper-button-next gallery-swiper-btn"></div>
+                        <div class="swiper-pagination gallery-swiper-pagination"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Карта з точками -->
+            <section class="route-map-section">
+                <h2 class="section-title-small" data-translate="route_map_title">Карта визначних місць</h2>
+                <div id="routePointsMap" class="route-points-map"></div>
+                <p class="map-note"><i class="fas fa-info-circle"></i> <span data-translate="route_map_note">На карті позначено ключові точки маршруту</span></p>
+            </section>
+
+            <!-- План маршруту -->
+            <section class="route-plan-section">
+                <h2 class="section-title-small" data-translate="route_plan_title">План маршруту</h2>
+                <div class="route-timeline" id="routeTimeline"></div>
+            </section>
+
+            <!-- Кнопки -->
+            <div class="route-actions-bottom">
+                <button id="bookRouteBtn" class="btn btn--primary btn--large">
+                    <i class="fas fa-calendar-check"></i> <span data-translate="booking_title">Забронювати</span>
+                </button>
+                <a href="routes.html" class="btn btn--outline btn--large">
+                    <i class="fas fa-arrow-left"></i> <span data-translate="routes_title">Всі маршрути</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="assets/images/logo-icon.png" alt="Відкрий Україну" class="footer-logo-icon">
+                <span class="footer-logo-text" data-translate="logo_text">Відкрий Україну</span>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Telegram">
+                    <i class="fa-brands fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4 data-translate="footer_navigation">Навігація</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_company">Компанія</h4>
+                    <ul>
+                        <li><a href="about.html" data-translate="footer_about">Про нас</a></li>
+                        <li><a href="about.html#contact" data-translate="footer_contacts">Контакти</a></li>
+                        <li><a href="routes.html#price" data-translate="footer_prices">Ціни</a></li>
+                        <li><a href="index.html#testimonials" data-translate="footer_reviews">Відгуки</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_contact_us">Контакти</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone" style="margin-right:8px;"></i>+38 (050) 123-45-67</a></li>
+                        <li><a href="#"><i class="fas fa-envelope" style="margin-right:8px;"></i>info@discover-ukraine.ua</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right:8px;"></i>Київ, вул. Хрещатик, 1</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col newsletter">
+                    <h4 data-translate="footer_newsletter">Будьте в курсі</h4>
+                    <form class="newsletter-form">
+                        <input type="email" data-translate-placeholder="footer_placeholder" placeholder="Ваша електронна адреса" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2026 <span data-translate="logo_text">Відкрий Україну</span>. <span data-translate="footer_copyright">Всі права захищено</span></p>
+            <p data-translate="footer_developed">Розроблено з любов'ю для мандрівників</p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Модальне вікно бронювання -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-overlay" id="bookingModalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="bookingModalClose"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="modal-title">Бронювання маршруту</h3>
+            <form id="bookingForm" class="modal-form">
+                <div class="form-group">
+                    <input type="text" id="bookingName" placeholder="Ваше ім'я" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="bookingEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="bookingPhone" placeholder="Телефон" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="bookingDate" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="bookingPeople" placeholder="Кількість осіб" min="1" value="1" required>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full">Підтвердити бронювання</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config/supabase.js"></script>
+    <script src="assets/script/script.js"></script>
+    <script src="assets/script/route-detail.js"></script>
+        <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init({
+                publicKey: "nG2ACgvA2WW4KKK9o", 
+            });
+        })();
+    </script>
+</body>
+</html>

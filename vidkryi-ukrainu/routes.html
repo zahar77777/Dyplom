@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Всі туристичні маршрути України на карті. Обирай маршрут Карпатами, замками чи містами.">
+    <title>Маршрути | Відкрий Україну</title>
+    <link rel="icon" type="image/png" href="assets/images/logo-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="assets/styles/variables.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <section class="header-section">
+        <h2 class="visually-hidden">Навігація сайту</h2>
+        <header class="header d-flex items-center"> 
+            <div class="content-wrap d-flex w-full justify-between">
+                <div class="logo">
+                    <img src="assets/images/logo-icon.png" alt="Відкрий Україну логотип" class="logo-icon">
+                    <a href="index.html" class="title-color" data-translate="logo_text">Відкрий Україну</a>
+                </div>
+                <div id="burgerMenu" class="burger-menu">
+                    <i id="openIcon" class="fa-solid fa-bars"></i>
+                    <i id="closeIcon" class="fa-solid fa-xmark d-none"></i>
+                </div>
+                <nav id="headerNav" class="header-nav">
+                    <ul class="main-menu items-center">
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" class="active" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                    <div class="mobile-auth">
+                        <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                        <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                    </div>
+                    <div class="mobile-user-info user-info">
+                        <span class="user-name"></span>
+                        <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                    </div>
+                    <div class="mobile-lang-selector">
+                        <div class="lang-selector">
+                            <div class="lang-selected" onclick="toggleLangDropdownMobile()">
+                                <span id="selectedLangTextMobile">UA</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="lang-options" id="langOptionsMobile">
+                                <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                                    <span class="flag">🇺🇦</span>
+                                    <span>Українська</span>
+                                </div>
+                                <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                                    <span class="flag">🇬🇧</span>
+                                    <span>English</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="desktop-auth">
+                    <button onclick="showLoginModal()" class="btn btn--outline" data-translate="btn_login">Вхід</button>
+                    <button onclick="showRegisterModal()" class="btn btn--primary" data-translate="btn_register">Реєстрація</button>
+                </div>
+                <div class="desktop-user-info user-info">
+                    <span class="user-name"></span>
+                    <button onclick="logout()" class="btn btn--outline" data-translate="btn_logout">Вийти</button>
+                </div>
+                <div class="lang-selector desktop-lang-selector">
+                    <div class="lang-selected" onclick="toggleLangDropdown()">
+                        <span id="selectedLangText">UA</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="lang-options" id="langOptions">
+                        <div class="lang-option" data-lang="uk" onclick="setLanguage('uk')">
+                            <span class="flag">🇺🇦</span>
+                            <span>Українська</span>
+                        </div>
+                        <div class="lang-option" data-lang="en" onclick="setLanguage('en')">
+                            <span class="flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title" data-translate="routes_title">Туристичні маршрути України</h1>
+                <p class="page-subtitle" data-translate="routes_subtitle">Обери маршрут на карті або зі списку нижче</p>
+            </div>
+        </section>
+
+        <section class="map-section">
+            <div class="container">
+                <div class="map-wrapper">
+                    <div id="routes-map" class="routes-map"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="filters-section">
+            <div class="container">
+                <div class="filters-wrapper">
+                    <button class="filter-btn active" data-filter="all" data-translate="filter_all">Всі маршрути</button>
+                    <button class="filter-btn" data-filter="carpathians" data-translate="filter_carpathians">Карпати</button>
+                    <button class="filter-btn" data-filter="castles" data-translate="filter_castles">Замки</button>
+                    <button class="filter-btn" data-filter="cities" data-translate="filter_cities">Міста</button>
+                    <button class="filter-btn" data-filter="water" data-translate="filter_water">Водні</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="routes-catalog" id="price">
+            <div class="container">
+                <h2 class="section-title" data-translate="routes_title">Всі маршрути</h2>
+                <div class="routes-grid" id="routes-catalog-container"></div>
+            </div>
+        </section>
+    </main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-logo">
+                <img src="assets/images/logo-icon.png" alt="Відкрий Україну" class="footer-logo-icon">
+                <span class="footer-logo-text" data-translate="logo_text">Відкрий Україну</span>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="https://t.me/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Telegram">
+                    <i class="fa-brands fa-telegram-plane"></i>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4 data-translate="footer_navigation">Навігація</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Головна</a></li>
+                        <li><a href="routes.html" data-translate="nav_routes">Маршрути</a></li>
+                        <li><a href="gallery.html" data-translate="nav_gallery">Галерея</a></li>
+                        <li><a href="about.html" data-translate="nav_about">Про нас</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_company">Компанія</h4>
+                    <ul>
+                        <li><a href="about.html" data-translate="footer_about">Про нас</a></li>
+                        <li><a href="about.html#contact" data-translate="footer_contacts">Контакти</a></li>
+                        <li><a href="routes.html#price" data-translate="footer_prices">Ціни</a></li>
+                        <li><a href="index.html#testimonials" data-translate="footer_reviews">Відгуки</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-translate="footer_contact_us">Контакти</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-phone" style="margin-right:8px;"></i>+38 (050) 123-45-67</a></li>
+                        <li><a href="#"><i class="fas fa-envelope" style="margin-right:8px;"></i>info@discover-ukraine.ua</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right:8px;"></i>Київ, вул. Хрещатик, 1</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col newsletter">
+                    <h4 data-translate="footer_newsletter">Будьте в курсі</h4>
+                    <form class="newsletter-form">
+                        <input type="email" data-translate-placeholder="footer_placeholder" placeholder="Ваша електронна адреса" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2026 <span data-translate="logo_text">Відкрий Україну</span>. <span data-translate="footer_copyright">Всі права захищено</span></p>
+            <p data-translate="footer_developed">Розроблено з любов'ю для мандрівників</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config/supabase.js"></script>
+<script src="assets/script/script.js"></script>
+<script src="assets/script/routes.js"></script>
+</body>
+</html>
