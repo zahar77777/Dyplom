@@ -3,9 +3,23 @@ let routesWithGalleries = [];
 let lightboxSwiper = null;
 let currentRoute = null;
 
-// НЕ ОГОЛОШУЙТЕ currentLang тут - він вже є в script.js!
+// Перевірка наявності Supabase
+if (!window.supabaseClient) {
+    console.error('Supabase не ініціалізовано!');
+    const container = document.getElementById('routesGalleryGrid');
+    if (container) {
+        container.innerHTML = '<div class="error-message" style="text-align:center;padding:60px;"><i class="fas fa-exclamation-triangle fa-3x" style="color: var(--primary-color);"></i><p>Помилка підключення до бази даних. Спробуйте оновити сторінку.</p></div>';
+    }
+}
 
 async function loadRoutesGalleryData() {
+    // Перевірка Supabase з повторною спробою
+    if (!window.supabaseClient) {
+        console.warn('Supabase не готовий, повторна спроба через 500ms');
+        setTimeout(() => loadRoutesGalleryData(), 500);
+        return;
+    }
+    
     try {
         const { data: routes, error: routesError } = await window.supabaseClient
             .from('routes')
@@ -23,7 +37,7 @@ async function loadRoutesGalleryData() {
         
         routesWithGalleries = [];
         
-        // Завантажуємо всі галереї паралельно замість послідовно
+        // Завантажуємо всі галереї паралельно
         const galleryResults = await Promise.all(
             routes.map(route =>
                 window.supabaseClient
@@ -68,7 +82,7 @@ async function loadRoutesGalleryData() {
         console.error('Помилка завантаження даних галереї:', error);
         const container = document.getElementById('routesGalleryGrid');
         if (container) {
-            container.innerHTML = '<div style="text-align: center; padding: 60px; grid-column: 1/-1;"><i class="fas fa-exclamation-triangle fa-3x" style="color: var(--primary-color);"></i><p>Помилка завантаження даних</p></div>';
+            container.innerHTML = '<div style="text-align: center; padding: 60px; grid-column: 1/-1;"><i class="fas fa-exclamation-triangle fa-3x" style="color: var(--primary-color);"></i><p>Помилка завантаження даних. Спробуйте оновити сторінку.</p></div>';
         }
     }
 }
@@ -77,8 +91,7 @@ function renderRoutesGallery() {
     const container = document.getElementById('routesGalleryGrid');
     if (!container) return;
     
-    // ВИКОРИСТОВУЙТЕ ГЛОБАЛЬНИЙ currentLang (без let!)
-    const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     if (routesWithGalleries.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 60px; grid-column: 1/-1;"><i class="fas fa-spinner fa-pulse fa-3x" style="color: var(--primary-color);"></i><p>Завантаження...</p></div>';
@@ -94,7 +107,7 @@ function renderRoutesGallery() {
         return `
         <div class="route-gallery-card" data-route-id="${route.id}">
             <div class="route-gallery-card__image">
-                <img src="${route.mainImage}" alt="${name}" loading="lazy" onerror="this.src='assets/images/placeholder.jpg'">
+                <img src="${route.mainImage}" alt="${escapeHtml(name)}" loading="lazy" onerror="this.src='assets/images/placeholder.jpg'">
                 <span class="route-gallery-card__badge">${route.gallery.length} фото</span>
             </div>
             <div class="route-gallery-card__content">
@@ -123,7 +136,7 @@ function renderRoutesGallery() {
 
 function openRouteLightbox(route) {
     currentRoute = route;
-    const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     const titleEl = document.getElementById('lightboxTitle');
     const regionEl = document.getElementById('infoRegion');
@@ -147,7 +160,7 @@ function openRouteLightbox(route) {
         route.gallery.forEach((imgSrc, index) => {
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
-            slide.innerHTML = `<img src="${imgSrc}" alt="${name} - фото ${index + 1}" loading="lazy" onerror="this.src='assets/images/placeholder.jpg'">`;
+            slide.innerHTML = `<img src="${imgSrc}" alt="${escapeHtml(name)} - фото ${index + 1}" loading="lazy" onerror="this.src='assets/images/placeholder.jpg'">`;
             wrapper.appendChild(slide);
         });
     }
