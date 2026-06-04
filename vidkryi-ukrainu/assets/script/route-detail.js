@@ -10,6 +10,15 @@ function getRouteIdFromUrl() {
 }
 
 async function loadRouteDetails() {
+    // Перевірка Supabase
+    if (!window.supabaseClient) {
+        console.error('Supabase не ініціалізовано');
+        if (typeof showNotification === 'function') {
+            showNotification('Помилка підключення до сервера', 'error');
+        }
+        return null;
+    }
+    
     const routeId = getRouteIdFromUrl();
     if (!routeId) {
         console.error('Немає ID маршруту');
@@ -92,7 +101,7 @@ function updateHeroSection(route) {
     const heroTitle = document.getElementById('heroTitle');
     const heroRegionSpan = document.querySelector('#heroRegion span');
     const heroPriceSpan = document.querySelector('#heroPrice span');
-    const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     if (heroImage) {
         heroImage.src = route.image_url;
@@ -110,7 +119,7 @@ function updateInfoSection(route) {
     const difficulty = document.getElementById('routeDifficulty');
     const location = document.getElementById('routeLocation');
     const distance = document.getElementById('routeDistance');
-    const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     if (description) description.textContent = lang === 'uk' ? route.description : route.description_en;
     if (duration) duration.textContent = lang === 'uk' ? route.duration : route.duration_en;
@@ -248,7 +257,7 @@ function updateTimeline(route) {
     if (!timelineContainer) return;
     
     timelineContainer.innerHTML = '';
-    const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     if (!route.timeline || route.timeline.length === 0) {
         timelineContainer.innerHTML = '<p>Програма маршруту відсутня</p>';
@@ -287,7 +296,7 @@ function updateTimeline(route) {
     console.log('Таймлайн ініціалізовано');
 }
 
-// ===== БРОНЮВАННЯ (БЕЗ МИТТЄВОГО EMAIL) =====
+// ===== БРОНЮВАННЯ =====
 function initBookingModal(route) {
     const bookBtn = document.getElementById('bookRouteBtn');
     const modal = document.getElementById('bookingModal');
@@ -298,6 +307,13 @@ function initBookingModal(route) {
     if (!bookBtn || !modal) {
         console.error('Елементи бронювання не знайдено');
         return;
+    }
+    
+    // Встановлюємо мінімальну дату
+    const dateInput = document.getElementById('bookingDate');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
     }
     
     async function loadCurrentUserForBooking() {
@@ -350,8 +366,24 @@ function initBookingModal(route) {
             const date = document.getElementById('bookingDate')?.value || '';
             const people = parseInt(document.getElementById('bookingPeople')?.value) || 1;
             
+            // Перевірка дати
+            if (date) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const selectedDate = new Date(date);
+                
+                if (selectedDate < today) {
+                    if (typeof showNotification === 'function') {
+                        showNotification('Не можна вибрати дату в минулому. Оберіть сьогоднішню або майбутню дату.', 'warning');
+                    }
+                    return;
+                }
+            }
+            
             if (!name || !email || !phone || !date) {
-                showNotification('Заповніть всі поля', 'warning');
+                if (typeof showNotification === 'function') {
+                    showNotification('Заповніть всі поля', 'warning');
+                }
                 return;
             }
             
@@ -360,7 +392,6 @@ function initBookingModal(route) {
             try {
                 const { data: { user } } = await window.supabaseClient.auth.getUser();
                 
-                // ЗБЕРІГАЄМО БРОНЮВАННЯ В БАЗУ (БЕЗ ВІДПРАВКИ EMAIL)
                 const { error: bookingError } = await window.supabaseClient
                     .from('bookings')
                     .insert([{
@@ -382,13 +413,17 @@ function initBookingModal(route) {
                 
                 console.log('✅ Бронювання збережено в базі. Очікує підтвердження адміна.');
                 
-                showNotification('Ваше бронювання прийнято! Очікуйте підтвердження від адміністратора.', 'success');
+                if (typeof showNotification === 'function') {
+                    showNotification('Ваше бронювання прийнято! Очікуйте підтвердження від адміністратора.', 'success');
+                }
                 closeModal();
                 bookingForm.reset();
                 
             } catch (error) {
                 console.error('Помилка бронювання:', error);
-                showNotification('Помилка бронювання. Спробуйте пізніше.', 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('Помилка бронювання. Спробуйте пізніше.', 'error');
+                }
             }
         });
     }
@@ -430,7 +465,9 @@ function setupRealtimePriceUpdate(routeId) {
                         currentRoute.price = payload.new.price;
                     }
                     
-                    showNotification('Ціну оновлено! Нова ціна: ' + payload.new.price + ' грн', 'info');
+                    if (typeof showNotification === 'function') {
+                        showNotification('Ціну оновлено! Нова ціна: ' + payload.new.price + ' грн', 'info');
+                    }
                 }
             }
         )
@@ -444,18 +481,6 @@ function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
-}
-
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i><span>${message}</span>`;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 4000);
 }
 
 // ===== ІНІЦІАЛІЗАЦІЯ СТОРІНКИ =====
