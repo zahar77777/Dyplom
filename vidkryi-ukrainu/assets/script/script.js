@@ -1,5 +1,6 @@
 // ===== БАГАТОМОВНІСТЬ =====
 let currentLang = localStorage.getItem('language') || 'uk';
+window.currentLang = currentLang;  // Глобальна змінна для всіх скриптів
 let translations = {};
 let currentUser = null;
 
@@ -21,6 +22,7 @@ function t(key) {
 
 async function setLanguage(lang) {
     currentLang = lang;
+    window.currentLang = lang;  // Оновлюємо глобальну змінну
     localStorage.setItem('language', lang);
     await loadTranslations(lang);
     updateAllTexts();
@@ -178,6 +180,8 @@ function showNotification(message, type = 'info') {
     }, 4000);
 }
 
+window.showNotification = showNotification;  // Глобальна функція
+
 // ===== ЗБЕРЕЖЕННЯ СТАНУ АВТОРИЗАЦІЇ =====
 function saveAuthState(user, name) {
     if (user) {
@@ -200,14 +204,12 @@ function preloadAuthFromCache() {
     const desktopUserInfo = document.querySelector('.desktop-user-info');
     const mobileUserInfo = document.querySelector('.mobile-user-info');
     if (userId && userName) {
-        // Залогінений — показуємо ім'я/вийти
         if (desktopAuth) desktopAuth.classList.remove('auth-ready');
         if (mobileAuth) mobileAuth.classList.remove('auth-ready');
         if (desktopUserInfo) desktopUserInfo.classList.add('auth-ready');
         if (mobileUserInfo) mobileUserInfo.classList.add('auth-ready');
         document.querySelectorAll('.user-name').forEach(el => { el.textContent = userName; });
     } else {
-        // Не залогінений — показуємо Вхід/Реєстрація
         if (desktopAuth) desktopAuth.classList.add('auth-ready');
         if (mobileAuth) mobileAuth.classList.add('auth-ready');
         if (desktopUserInfo) desktopUserInfo.classList.remove('auth-ready');
@@ -223,7 +225,6 @@ async function loadCurrentUser() {
     const desktopUserInfo = document.querySelector('.desktop-user-info');
     const mobileUserInfo = document.querySelector('.mobile-user-info');
     
-    // Додаємо клас завантаження
     if (desktopAuth) desktopAuth.classList.add('auth-loading');
     if (mobileAuth) mobileAuth.classList.add('auth-loading');
     
@@ -284,7 +285,6 @@ async function loadCurrentUser() {
         currentUser = null;
         updateAuthUI();
     } finally {
-        // Прибираємо клас завантаження
         if (desktopAuth) desktopAuth.classList.remove('auth-loading');
         if (mobileAuth) mobileAuth.classList.remove('auth-loading');
     }
@@ -467,6 +467,11 @@ window.logout = logout;
 
 // ===== МОДАЛЬНЕ ВІКНО КОНСУЛЬТАЦІЇ =====
 async function openConsultationModal() {
+    if (!window.supabaseClient) {
+        showNotification('Помилка підключення', 'error');
+        return;
+    }
+    
     const { data: routes } = await window.supabaseClient
         .from('routes')
         .select('id, name, name_en')
@@ -489,22 +494,22 @@ async function openConsultationModal() {
             <form class="modal-form" id="consultationFormDynamic">
                 <div class="form-group">
                     <label>${t('modal_name')} ${isLoggedIn ? '' : '*'}</label>
-                    <input type="text" id="consultName" value="${userData.name}" placeholder="${t('modal_name')}" ${!isLoggedIn ? 'required' : ''}>
+                    <input type="text" id="consultName" value="${userData.name.replace(/"/g, '&quot;')}" placeholder="${t('modal_name')}" ${!isLoggedIn ? 'required' : ''}>
                 </div>
                 <div class="form-group">
                     <label>Email ${isLoggedIn ? '' : '*'}</label>
-                    <input type="email" id="consultEmail" value="${userData.email}" placeholder="${t('modal_email')}" ${!isLoggedIn ? 'required' : ''}>
+                    <input type="email" id="consultEmail" value="${userData.email.replace(/"/g, '&quot;')}" placeholder="${t('modal_email')}" ${!isLoggedIn ? 'required' : ''}>
                 </div>
                 <div class="form-group">
                     <label>Телефон ${isLoggedIn ? '' : '*'}</label>
-                    <input type="tel" id="consultPhone" value="${userData.phone}" placeholder="${t('modal_phone')}" ${!isLoggedIn ? 'required' : ''}>
+                    <input type="tel" id="consultPhone" value="${userData.phone.replace(/"/g, '&quot;')}" placeholder="${t('modal_phone')}" ${!isLoggedIn ? 'required' : ''}>
                 </div>
                 <div class="form-group">
                     <label>Оберіть маршрут *</label>
                     <select id="consultRoute" required>
                         <option value="" disabled selected>${t('modal_route_placeholder')}</option>
                         ${routes.map(route => `
-                            <option value="${route.id}">${currentLang === 'uk' ? route.name : route.name_en}</option>
+                            <option value="${route.id}">${currentLang === 'uk' ? route.name.replace(/"/g, '&quot;') : route.name_en.replace(/"/g, '&quot;')}</option>
                         `).join('')}
                     </select>
                 </div>
@@ -638,6 +643,11 @@ async function renderTestimonials() {
     if (!container) return;
     
     try {
+        if (!window.supabaseClient) {
+            container.innerHTML = '<p style="text-align:center;">Помилка підключення</p>';
+            return;
+        }
+        
         const { data: reviews } = await window.supabaseClient
             .from('reviews')
             .select('*')
@@ -686,6 +696,11 @@ async function renderPopularRoutes() {
     if (!container) return;
 
     try {
+        if (!window.supabaseClient) {
+            container.innerHTML = '<p style="text-align:center;">Помилка підключення</p>';
+            return;
+        }
+        
         const { data: routes, error } = await window.supabaseClient
             .from('routes')
             .select('*')
@@ -699,7 +714,7 @@ async function renderPopularRoutes() {
             return;
         }
         
-        const lang = typeof currentLang !== 'undefined' ? currentLang : localStorage.getItem('language') || 'uk';
+        const lang = window.currentLang || localStorage.getItem('language') || 'uk';
         
         container.innerHTML = routes.map(route => `
             <div class="route-card">
@@ -750,6 +765,11 @@ async function renderPopularRoutes() {
 // ===== ПІДПИСКА НА НОВИНИ =====
 async function handleNewsletterSubscribe(email) {
     try {
+        if (!window.supabaseClient) {
+            showNotification('Помилка підключення', 'error');
+            return false;
+        }
+        
         const { error } = await window.supabaseClient
             .from('newsletter_subscribers')
             .insert([{ email }]);
@@ -803,6 +823,5 @@ function escapeHtml(str) {
         await renderTestimonials();
     }
     
-    // Додаємо клас loaded після завантаження
     document.body.classList.add('loaded');
 })();
