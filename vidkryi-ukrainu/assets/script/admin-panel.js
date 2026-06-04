@@ -13,8 +13,12 @@ function showNotification(message, type = 'info') {
 
 // ===== ФУНКЦІЯ ВІДПРАВКИ EMAIL ПРО СТАТУС =====
 async function sendStatusEmail(booking, newStatus) {
-    if (typeof emailjs === 'undefined') {
-        console.warn('EmailJS не підключено');
+    // ПЕРЕВІРКА НАЯВНОСТІ EMAILJS
+    if (typeof emailjs === 'undefined' || !emailjs.send) {
+        console.error('EmailJS не доступний');
+        if (typeof showNotification === 'function') {
+            showNotification('⚠️ Email не відправлено: сервіс не налаштовано', 'warning');
+        }
         return false;
     }
     
@@ -49,12 +53,21 @@ async function sendStatusEmail(booking, newStatus) {
         
         console.log(`📧 Відправка ${newStatus} email на ${booking.email}`);
         
+        // ДОДАТКОВА ПЕРЕВІРКА
+        if (!templateId || !templateParams.to_email) {
+            console.error('Некоректні параметри для EmailJS');
+            return false;
+        }
+        
         const result = await emailjs.send('service_jjy0v9l', templateId, templateParams);
         console.log(`✅ Email про ${newStatus} відправлено!`, result);
         return true;
         
     } catch (error) {
         console.error(`❌ Помилка відправки email про ${newStatus}:`, error);
+        if (typeof showNotification === 'function') {
+            showNotification(`Не вдалося відправити email: ${error.message || 'помилка сервісу'}`, 'warning');
+        }
         return false;
     }
 }
