@@ -6,6 +6,11 @@ let routesData = [];
 let routeInfoControl = null;
 
 async function loadRoutesData() {
+    if (!window.supabaseClient) {
+        console.error('Supabase не ініціалізовано');
+        return [];
+    }
+    
     const { data, error } = await window.supabaseClient
         .from('routes')
         .select('*')
@@ -70,11 +75,15 @@ function addMarkersToMap(filterType = 'all') {
         });
         
         const marker = L.marker([route.start_coords_lat, route.start_coords_lng], { icon: markerIcon }).addTo(map);
+        
+        const lang = window.currentLang || localStorage.getItem('language') || 'uk';
+        const routeName = lang === 'uk' ? route.name : route.name_en;
+        
         marker.bindPopup(`
             <div class="popup-content">
-                <div class="popup-title">${currentLang === 'uk' ? route.name : route.name_en}</div>
+                <div class="popup-title">${escapeHtml(routeName)}</div>
                 <div class="popup-buttons">
-                    <button onclick="buildRouteToStart(${route.id}, '${route.start_name}', [${route.start_coords_lat}, ${route.start_coords_lng}])" class="popup-btn popup-btn--route">
+                    <button onclick="buildRouteToStart(${route.id}, '${escapeHtml(route.start_name)}', [${route.start_coords_lat}, ${route.start_coords_lng}])" class="popup-btn popup-btn--route">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><use href="assets/images/icons/sprite.svg#icon-walk"></use></svg>${t('route_on_map_btn')}
                     </button>
                     <a href="route-detail.html?id=${route.id}" class="popup-btn popup-btn--detail">
@@ -119,7 +128,7 @@ async function buildRouteToStart(routeId, startName, startCoords) {
             routeInfoControl = L.control({ position: 'topright' });
             routeInfoControl.onAdd = function() {
                 const div = L.DomUtil.create('div', 'route-info-panel');
-                div.innerHTML = `<strong>Як доїхати до старту</strong><div class="info-row"><span class="info-label">Старт:</span><span class="info-value">${startName}</span></div><div class="info-row"><span class="info-label">Відстань:</span><span class="info-value">${distanceKm} км</span></div><div class="info-row"><span class="info-label">Час:</span><span class="info-value">${durationMin} хв</span></div>`;
+                div.innerHTML = `<strong>Як доїхати до старту</strong><div class="info-row"><span class="info-label">Старт:</span><span class="info-value">${escapeHtml(startName)}</span></div><div class="info-row"><span class="info-label">Відстань:</span><span class="info-value">${distanceKm} км</span></div><div class="info-row"><span class="info-label">Час:</span><span class="info-value">${durationMin} хв</span></div>`;
                 return div;
             };
             routeInfoControl.addTo(map);
@@ -132,7 +141,7 @@ function renderRoutesCatalog(filterType = 'all') {
     if (!container) return;
     
     const filteredRoutes = filterType === 'all' ? routesData : routesData.filter(route => route.region === filterType);
-    const lang = currentLang;
+    const lang = window.currentLang || localStorage.getItem('language') || 'uk';
     
     container.innerHTML = '';
     
