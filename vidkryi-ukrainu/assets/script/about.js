@@ -3,6 +3,17 @@ async function loadAboutStats() {
     const statRoutes = document.getElementById('statRoutes');
     if (!statRoutes) return;
     
+    // Перевірка Supabase
+    if (!window.supabaseClient) {
+        console.error('Supabase не ініціалізовано');
+        const stats = ['statRoutes', 'statTravelers', 'statRegions', 'statReviews'];
+        stats.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '?';
+        });
+        return;
+    }
+    
     try {
         // 1. Кількість маршрутів
         const { count: routesCount } = await window.supabaseClient
@@ -40,7 +51,12 @@ async function loadAboutStats() {
         document.getElementById('statReviews').textContent = positivePercent + '%';
         
     } catch (error) {
-        console.error('Помилка:', error);
+        console.error('Помилка завантаження статистики:', error);
+        const stats = ['statRoutes', 'statTravelers', 'statRegions', 'statReviews'];
+        stats.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '?';
+        });
     }
 }
 
