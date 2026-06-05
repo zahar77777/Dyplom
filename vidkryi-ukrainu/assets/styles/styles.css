@@ -1920,7 +1920,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 852px) {
     .burger-menu {
         display: block;
         order: 3;
@@ -2265,7 +2265,7 @@ body {
     }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 852px) {
     .mobile-auth,
     .mobile-user-info {
         display: none !important;
@@ -2385,7 +2385,7 @@ body {
     display: block;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 852px) {
     .desktop-lang-selector {
         display: none;
     }
@@ -2394,7 +2394,7 @@ body {
     }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 852px) {
     .mobile-lang-selector {
         display: none;
     }
